@@ -228,12 +228,15 @@ public class NotifyQQ extends Notifier {
          */
         public FormValidation doCheckNumber(@QueryParameter String value)
                 throws IOException, ServletException {
+            //name 改为不需要检验
+            /*  
             if (value.length() <= 4)
                 return FormValidation.error("QQ号太短！");
             else if (value.length() > 15)
                 return FormValidation.error("QQ号太长！");
             else if (!isNumeric(value))
-                return FormValidation.error("QQ号格式不对，数字数字数字！");
+                return FormValidation.error("QQ号格式不对，数字数字数字！");   
+            */
             return FormValidation.ok();
         }
 
