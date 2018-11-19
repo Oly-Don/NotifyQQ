@@ -79,8 +79,10 @@ public class NotifyQQ extends Notifier {
 
         Jenkins.getInstance();
         String jobURL = "";
+        String currenLogURL = "";
         try {
             jobURL = build.getEnvironment(listener).expand("${JOB_URL}");
+             currenLogURL = jobURL.endsWith("/")?(jobURL+"console"):(jobURL+"/"+"console");
             logger.println("jobURL = " + jobURL);
         } catch (Exception e) {
             logger.println("tokenmacro expand error.");
@@ -90,9 +92,11 @@ public class NotifyQQ extends Notifier {
         msg += build.getFullDisplayName();
         if (build.getResult() == Result.SUCCESS) {
             msg += "编译成功！" + qqmessage;
+            msg += "    本次构建日志地址:"+currenLogURL;
         } else {
             msg += "编译失败了...";
             msg += "jenkins地址:" + jobURL;
+            msg += "    本次构建日志地址:"+currenLogURL;
         }
 
         msg = URLEncoder.encode(msg, "UTF-8");
