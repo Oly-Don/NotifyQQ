@@ -81,24 +81,22 @@ public class NotifyQQ extends Notifier {
         String jobURL = "";
         String currenLogURL = "";
         try {
-            jobURL = build.getEnvironment(listener).expand("${JOB_URL}");
+            jobURL = build.getEnvironment(listener).expand("${BUILD_URL}");
              currenLogURL = jobURL.endsWith("/")?(jobURL+"console"):(jobURL+"/"+"console");
             logger.println("jobURL = " + jobURL);
         } catch (Exception e) {
             logger.println("tokenmacro expand error.");
         }
-
-        String msg = "各位小伙伴，项目";
+        String msg = "各位小伙伴，项目《";
         msg += build.getFullDisplayName();
+        build.
         if (build.getResult() == Result.SUCCESS) {
-            msg += "编译成功！" + qqmessage;
+            msg += "》编译成功！" + qqmessage;
             msg += "    本次构建日志地址:"+currenLogURL;
         } else {
-            msg += "编译失败了...";
-            msg += "jenkins地址:" + jobURL;
+            msg += "》编译失败了...";
             msg += "    本次构建日志地址:"+currenLogURL;
         }
-
         msg = URLEncoder.encode(msg, "UTF-8");
         msg = msg.replaceAll("\\+", "_");
 
