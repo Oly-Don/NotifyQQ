@@ -91,7 +91,7 @@ public class NotifyQQ extends Notifier {
         }
         SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
         String daytime = format.format(new Date());
-        String msg = "各位小伙伴，系统《";
+        String msg = "各位小伙伴，JENKINS任务《";
         msg += build.getFullDisplayName();
         if (build.getResult() == Result.SUCCESS) {
             msg += "》编译成功！" + qqmessage;
@@ -102,7 +102,6 @@ public class NotifyQQ extends Notifier {
         }
         msg+="  更新时间:"+daytime;
         msg = URLEncoder.encode(msg, "UTF-8");
-        msg = msg.replaceAll("\\+", "_");
 
         for (int i = 0; i < qQNumbers.size(); i++) {
             QQNumber number = qQNumbers.get(i);
