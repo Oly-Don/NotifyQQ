@@ -25,7 +25,9 @@ import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -34,6 +36,11 @@ import java.util.regex.Pattern;
  * @author Kohsuke Kawaguchi
  */
 public class NotifyQQ extends Notifier {
+
+    @Override
+    public boolean prebuild(AbstractBuild<?, ?> build, BuildListener listener) {
+        return super.prebuild(build, listener);
+    }
 
     /**
      * QQ号码列表
@@ -74,22 +81,18 @@ public class NotifyQQ extends Notifier {
 
     @Override
     public boolean perform(AbstractBuild build, Launcher launcher, BuildListener listener) throws UnsupportedEncodingException {
-
         logger = listener.getLogger();
-
         Jenkins.getInstance();
-        String jobURL = "";
         String currenLogURL = "";
         try {
-            jobURL = build.getEnvironment(listener).expand("${BUILD_URL}");
-             currenLogURL = jobURL.endsWith("/")?(jobURL+"console"):(jobURL+"/"+"console");
-            logger.println("jobURL = " + jobURL);
+            currenLogURL = build.getEnvironment(listener).expand("${BUILD_URL}")+"console";
         } catch (Exception e) {
             logger.println("tokenmacro expand error.");
         }
-        String msg = "各位小伙伴，项目《";
+        SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
+        String daytime = format.format(new Date());
+        String msg = "各位小伙伴，系统《";
         msg += build.getFullDisplayName();
-        build.
         if (build.getResult() == Result.SUCCESS) {
             msg += "》编译成功！" + qqmessage;
             msg += "    本次构建日志地址:"+currenLogURL;
@@ -97,6 +100,7 @@ public class NotifyQQ extends Notifier {
             msg += "》编译失败了...";
             msg += "    本次构建日志地址:"+currenLogURL;
         }
+        msg+="  更新时间:"+daytime;
         msg = URLEncoder.encode(msg, "UTF-8");
         msg = msg.replaceAll("\\+", "_");
 
@@ -104,9 +108,9 @@ public class NotifyQQ extends Notifier {
             QQNumber number = qQNumbers.get(i);
             send(GenerateMessageURL(number.GetUrlString(), msg));
         }
-
         return true;
     }
+
 
     /**
      * 构建发送QQ消息url
